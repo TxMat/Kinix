@@ -12,15 +12,15 @@ local kd = 0.02 -- Terme dérivés
 local deadband = 1.0 -- Plage d'erreur acceptable autour de la valeur cible
 
 -- Variables
-local targetReactivity = 100.0 -- Valeur cible d'efficacité
+local targetEfficiency = 100.0 -- Valeur cible d'efficacité
 local integral = 0.0 -- Variable pour la composante intégrale
 local lastError = 0.0 -- Variable pour stocker la dernière erreur
 
 local sign = 1
-local lastReactivity = 0.0
-local currentReactivity = 0.0
+local lastEfficiency = 0.0
+local currentEfficiency = 0.0
 
-function getCurrentReactivity()
+function getcurrentEfficiency()
     print("CR: " .. CR .. " TR: " .. TR)
     local efficiency = 100 - math.abs(CR - TR)
     return math.max(0, efficiency)
@@ -43,11 +43,21 @@ end
 
 -- Fonction de contrôle PID
 function pidControl()
-    lastReactivity = currentReactivity
-    currentReactivity = getCurrentReactivity()
-    local error = targetReactivity - currentReactivity -- Calcul de l'erreur
-    -- if math.abs(error) > deadband then
-        print(currentReactivity)
+    lastEfficiency = currentEfficiency
+    currentEfficiency = getcurrentEfficiency()
+    local error = targetEfficiency - currentEfficiency -- Calcul de l'erreur
+    if math.abs(error) > deadband then
+
+        if allgood then
+            integral = 0.0 -- Variable pour la composante intégrale
+            lastError = 0.0 -- Variable pour stocker la dernière erreur
+
+            sign = 1
+            lastEfficiency = 0.0
+            currentEfficiency = 0.0
+            print("# Target Reactivity Changed !#")
+            allgood = false
+        end
 
         -- Terme proportionnel
         local p = kp * error
@@ -62,7 +72,7 @@ function pidControl()
         -- Calcul de la commande totale
         local controlOutput = p + integral + derivative
 
-        if currentReactivity < lastReactivity then
+        if currentEfficiency < lastEfficiency then
             sign = sign * -1
         end
 
@@ -71,18 +81,21 @@ function pidControl()
         -- Utilisez la commande pour ajuster la Current Reactivity
         addIncrement(controlOutput)
 
-        print("PID Control: " .. controlOutput .. " CR: " .. CR .. " TR: " .. TR .. " ER: " .. error .. " IR: " .. integral .. " DR: " .. derivative)
+        print("PID Control: " .. controlOutput .. " ERR: " .. error .. " IR: " .. integral .. " DR: " .. derivative)
+        print("Current Efficiency: " .. currentEfficiency)
+        print("##############################################")
 
         -- Répétez le contrôle à intervalles réguliers
-        sleep(1) -- Attendez 1 seconde avant la prochaine itération
+        sleep(1) -- 1 seconde
     else
-        TR = math.random(1, 100)
-        local integral = 0.0 -- Variable pour la composante intégrale
-        local lastError = 0.0 -- Variable pour stocker la dernière erreur
-
-        local sign = 1
-        local lastReactivity = 0.0
-        local currentReactivity = 0.0
+        if not allgood then
+            print("# Current Reactivity Stabilized !#")
+            allgood = true
+            sleep(10)
+            TR = math.random(1, 100)
+        else
+            sleep(1)
+        end
     end
 end
 

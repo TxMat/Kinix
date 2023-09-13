@@ -38,12 +38,12 @@ function pidControl()
     if math.abs(error) > deadband then
 
         if allgood then
-            local integral = 0.0 -- Variable pour la composante intégrale
-            local lastError = 0.0 -- Variable pour stocker la dernière erreur
+            integral = 0.0 -- Variable pour la composante intégrale
+            lastError = 0.0 -- Variable pour stocker la dernière erreur
 
-            local sign = 1
-            local lastEfficiency = 0.0
-            local currentEfficiency = 0.0
+            sign = 1
+            lastEfficiency = 0.0
+            currentEfficiency = 0.0
             print("# Target Reactivity Changed !#")
             allgood = false
         end

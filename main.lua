@@ -19,13 +19,15 @@ local sign = 1
 local lastEfficiency = 0.0
 local currentEfficiency = 0.0
 
+local allgood = false
+
 function getCurrentEfficiency()
-    r.getEfficiency()
+    return r.getEfficiency()
 end
 
 
 function addIncrement(inc)
-    r.adjustReactivity(inc)
+    return r.adjustReactivity(inc)
 end
 
 -- Fonction de contrôle PID
@@ -34,6 +36,17 @@ function pidControl()
     currentEfficiency = getCurrentEfficiency()
     local error = targetEfficiency - currentEfficiency -- Calcul de l'erreur
     if math.abs(error) > deadband then
+
+        if allgood then
+            local integral = 0.0 -- Variable pour la composante intégrale
+            local lastError = 0.0 -- Variable pour stocker la dernière erreur
+
+            local sign = 1
+            local lastEfficiency = 0.0
+            local currentEfficiency = 0.0
+            print("# Target Reactivity Changed !#")
+            allgood = false
+        end
 
         -- Terme proportionnel
         local p = kp * error
@@ -63,13 +76,12 @@ function pidControl()
         -- Répétez le contrôle à intervalles réguliers
         os.sleep(5) -- 5 secondes
     else
-        local integral = 0.0 -- Variable pour la composante intégrale
-        local lastError = 0.0 -- Variable pour stocker la dernière erreur
-
-        local sign = 1
-        local lastEfficiency = 0.0
-        local currentEfficiency = 0.0
-        print("# Target Reactivity Changed !#")
+        if not allgood then
+            print("# Current Reactivity Stabilized !#")
+            allgood = true
+        else
+            os.sleep(1)
+        end
     end
 end
 

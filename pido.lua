@@ -5,10 +5,10 @@
 local r = peripheral.wrap("back")
 
 -- Constantes PID (vous pouvez ajuster ces valeurs)
-local kp = 0.05  -- Terme proportionnel
-local ki = 0.002 -- Terme intégral
-local kd = 0.02 -- Terme dérivés
-local deadband = 1.0 -- Plage d'erreur acceptable autour de la valeur cible
+local kp = 0.8  -- Terme proportionnel
+local ki = 0.000 -- Terme intégral (no overshoot so no need for integral)
+local kd = 0.1 -- Terme dérivé
+local deadband = 0.01 -- Plage d'erreur acceptable autour de la valeur cible
 
 -- Variables
 local targetEfficiency = 100.0 -- Valeur cible d'efficacité
@@ -43,7 +43,7 @@ function pidControl()
 
             sign = 1
             lastEfficiency = 0.0
-            currentEfficiency = 0.0
+            currentEfficiency = getcurrentEfficiency()
             print("# Target Reactivity Changed !#")
             allgood = false
         end

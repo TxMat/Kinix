@@ -6,10 +6,10 @@ local TR = math.random(1, 100)
 
 
 -- Constantes PID (vous pouvez ajuster ces valeurs)
-local kp = 0.05  -- Terme proportionnel
-local ki = 0.002 -- Terme intégral
-local kd = 0.02 -- Terme dérivés
-local deadband = 1.0 -- Plage d'erreur acceptable autour de la valeur cible
+local kp = 0.8  -- Terme proportionnel
+local ki = 0.000 -- Terme intégral
+local kd = 0.1 -- Terme dérivé
+local deadband = 0.01 -- Plage d'erreur acceptable autour de la valeur cible
 
 -- Variables
 local targetEfficiency = 100.0 -- Valeur cible d'efficacité
@@ -19,6 +19,8 @@ local lastError = 0.0 -- Variable pour stocker la dernière erreur
 local sign = 1
 local lastEfficiency = 0.0
 local currentEfficiency = 0.0
+
+local allgood = false
 
 function getcurrentEfficiency()
     print("CR: " .. CR .. " TR: " .. TR)
@@ -53,8 +55,8 @@ function pidControl()
             lastError = 0.0 -- Variable pour stocker la dernière erreur
 
             sign = 1
+            currentEfficiency = getcurrentEfficiency()
             lastEfficiency = 0.0
-            currentEfficiency = 0.0
             print("# Target Reactivity Changed !#")
             allgood = false
         end
@@ -91,7 +93,7 @@ function pidControl()
         if not allgood then
             print("# Current Reactivity Stabilized !#")
             allgood = true
-            sleep(10)
+            sleep(2)
             TR = math.random(1, 100)
         else
             sleep(1)

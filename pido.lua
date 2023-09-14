@@ -5,9 +5,9 @@
 local r = peripheral.wrap("back")
 
 -- Constantes PID (vous pouvez ajuster ces valeurs)
-local kp = 0.8  -- Terme proportionnel
+local kp = 0.1  -- Terme proportionnel
 local ki = 0.000 -- Terme intégral (no overshoot so no need for integral)
-local kd = 0.1 -- Terme dérivé
+local kd = 0.08 -- Terme dérivé
 local deadband = 0.01 -- Plage d'erreur acceptable autour de la valeur cible
 
 -- Variables

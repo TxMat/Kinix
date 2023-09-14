@@ -4,22 +4,22 @@
 -- Reactor
 local r = peripheral.wrap("back")
 
--- Constantes PID (vous pouvez ajuster ces valeurs)
-local kp = 0.8  -- Terme proportionnel
-local ki = 0.000 -- Terme intégral (no overshoot so no need for integral)
-local kd = 0.1 -- Terme dérivé
-local deadband = 0.01 -- Plage d'erreur acceptable autour de la valeur cible
+-- PID Constants (you can adjust these values)
+local kp = 0.2  -- Proportional term
+local ki = 0.000 -- Integral term (no overshoot so no need for integral)
+local kd = 0.08 -- Derivative term
+local deadband = 0.01 -- Acceptable error range around target value
 
 -- Variables
-local targetEfficiency = 100.0 -- Valeur cible d'efficacité
-local integral = 0.0 -- Variable pour la composante intégrale
-local lastError = 0.0 -- Variable pour stocker la dernière erreur
+local targetEfficiency = 100.0 -- Target efficiency value
+local integral = 0.0 -- Variable for integral component
+local lastError = 0.0 -- Variable to store last error
 
-local sign = 1
-local lastEfficiency = 0.0
-local currentEfficiency = 0.0
+local sign = 1 -- Variable to store sign of the correction
+local lastEfficiency = 0.0 -- Variable to store last efficiency
+local currentEfficiency = 0.0 -- Variable to store current efficiency
 
-local allgood = false
+local allgood = false -- Variable to store if the reactor is stable
 
 function getCurrentEfficiency()
     return r.getEfficiency()
@@ -30,51 +30,53 @@ function addIncrement(inc)
     return r.adjustReactivity(inc)
 end
 
--- Fonction de contrôle PID
+-- PID Control Function
 function pidControl()
     lastEfficiency = currentEfficiency
     currentEfficiency = getCurrentEfficiency()
-    local error = targetEfficiency - currentEfficiency -- Calcul de l'erreur
+    local error = targetEfficiency - currentEfficiency -- Calculate error
     if math.abs(error) > deadband then
 
         if allgood then
-            integral = 0.0 -- Variable pour la composante intégrale
-            lastError = 0.0 -- Variable pour stocker la dernière erreur
+            -- Reset PID variables
+            integral = 0.0
+            lastError = 0.0
 
             sign = 1
             lastEfficiency = 0.0
-            currentEfficiency = getcurrentEfficiency()
+            currentEfficiency = getCurrentEfficiency()
             print("# Target Reactivity Changed !#")
             allgood = false
         end
 
-        -- Terme proportionnel
+        -- Proportional term calculation
         local p = kp * error
 
-        -- Terme intégral
+        -- Integral term calculation
         integral = integral + ki * error
 
-        -- Terme dérivé
+        -- Derivative term calculation
         local derivative = kd * (error - lastError)
         lastError = error
 
-        -- Calcul de la commande totale
+        -- Calculate control output
         local controlOutput = p + integral + derivative
 
         if currentEfficiency < lastEfficiency then
+            -- If efficiency is decreasing, reverse the sign of the correction
             sign = sign * -1
         end
 
         controlOutput = sign * controlOutput
 
-        -- Utilisez la commande pour ajuster la Current Reactivity
+        -- Add correction to the reactor
         addIncrement(controlOutput)
 
         print("PID Control: " .. controlOutput .. " ERR: " .. error .. " IR: " .. integral .. " DR: " .. derivative)
         print("Current Efficiency: " .. currentEfficiency)
 
-        -- Répétez le contrôle à intervalles réguliers
-        os.sleep(5) -- 5 secondes
+        -- Repeat control at regular intervals
+        os.sleep(5) -- 5 seconds (don't go any lower or you'll be rate limited)
     else
         if not allgood then
             print("# Current Reactivity Stabilized !#")
@@ -85,7 +87,7 @@ function pidControl()
     end
 end
 
--- Boucle de contrôle principale
+-- Main loop
 while true do
     pidControl()
 end

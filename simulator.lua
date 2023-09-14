@@ -6,9 +6,9 @@ local TR = math.random(1, 100)
 
 
 -- Constantes PID (vous pouvez ajuster ces valeurs)
-local kp = 0.8  -- Terme proportionnel
+local kp = 0.2  -- Terme proportionnel
 local ki = 0.000 -- Terme intégral
-local kd = 0.1 -- Terme dérivé
+local kd = 0.08 -- Terme dérivé
 local deadband = 0.01 -- Plage d'erreur acceptable autour de la valeur cible
 
 -- Variables

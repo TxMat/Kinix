@@ -4,8 +4,7 @@ A Simple PID Controller for Mekanism Better Fission Reactor
 
 ---
 
-
-![img.png](images/reactor.png)
+![img.png](images/98IR_reactor.png)
 
 ## Requirements
 
@@ -41,9 +40,20 @@ Pido is configured to avoid overshoots and prefers to be slow and steady. You ca
 - `deadband` : Deadband for the error
 
 ---
+## Simulation
+
+You can simulate the pid controller using the `simulator.lua` file. This file will simulate the reactor and the pid controller for testing pruposes.
+
+However, the simulation is not perfect and greatly simplify the reactor by assuming instant response time.
+
+It should only be used for debugging, not fine-tuning
+
+---
 ## Disclaimer
 
-This program as is, is not meant to be used with very high injection rates as the Error Level will not have the time to recover. However, if you still want to try it, you can adjust the above variables to your liking. *(and post a PR if you manage to get it working)*
+This program while being highly efficient, does not prevent meltdowns. In the worst case scenario, (when the target reactivity changes from 90+ to 10- multiple times in a row) the error level might spike and the program might be unable to recover. In this case, the reactor will turn off and you will have to restart it manually.
+
+However, no incidents were reported yet. During the testing phase, the program was able to recover from a 90+ to 10- change in reactivity in less than 30 seconds causing a 50% spike in the error level.
 
 
 

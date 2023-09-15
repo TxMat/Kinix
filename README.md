@@ -1,4 +1,4 @@
-# Kinkx
+# Kinix
 
 A Simple PID Controller for Mekanism Better Fission Reactor
 
@@ -15,7 +15,7 @@ A Simple PID Controller for Mekanism Better Fission Reactor
 
 ## Usage
 
-- Copy the `pido.lua` file to your minecraft computer using the `wget` command
+- Copy the `kinix.lua` file to your minecraft computer using the `wget` command
 
 ```shell
 wget https://raw.githubusercontent.com/TxMat/kinix/main/kinix.lua kinix.lua

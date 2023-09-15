@@ -1,4 +1,4 @@
-# Pido
+# Kinkx
 
 A Simple PID Controller for Mekanism Better Fission Reactor
 
@@ -18,13 +18,13 @@ A Simple PID Controller for Mekanism Better Fission Reactor
 - Copy the `pido.lua` file to your minecraft computer using the `wget` command
 
 ```shell
-wget https://raw.githubusercontent.com/TxMat/pido/main/pido.lua pido.lua
+wget https://raw.githubusercontent.com/TxMat/kinix/main/kinix.lua kinix.lua
 ```
 
 - Run the program
 
 ```shell
-./pido.lua
+./kinix.lua
 ```
 
 ![img.png](images/CC_Screen.png)
@@ -32,7 +32,7 @@ wget https://raw.githubusercontent.com/TxMat/pido/main/pido.lua pido.lua
 ---
 ## Configuration
 
-Pido is configured to avoid overshoots and prefers to be slow and steady. You can change the comportment of the pid by adjusting the following variables:
+kinix is configured to avoid overshoots and prefers to be slow and steady. You can change the comportment of the pid by adjusting the following variables:
 
 - `kp` : Proportional gain
 - `ki` : Integral gain
